@@ -48,8 +48,8 @@ render() {
     return (
         <div className="directory-menu">
           {
-            this.state.sections.map(({title, id, imageUrl, size}) => {
-              return <MenuItem size={size} imageUrl={imageUrl} key={id} title={title}/>
+            this.state.sections.map(({id, ...otherSectionProps}) => {
+              return <MenuItem key={id} {...otherSectionProps}/>
             })
           }      
         </div> 

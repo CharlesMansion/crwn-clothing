@@ -3,6 +3,7 @@ import 'firebase/firestore';
 import 'firebase/auth';
 
 
+
 const config = {
     apiKey: "AIzaSyApzfy9iSmGz9z3laxPGJ-LdVgr4uU4YRA",
     authDomain: "crwn-clothing-base.firebaseapp.com",
@@ -38,6 +39,37 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     }
     return userRef;
 }
+
+export const importDocumentsAndCollections = async (collectionKey, objectsToAdd) => {
+    const collectionRef = firestore.collection(collectionKey)
+    const batch = firestore.batch();
+
+    objectsToAdd.forEach((obj) => {
+        const newDocRef = collectionRef.doc();
+        batch.set(newDocRef, obj)
+    })
+    return await batch.commit()
+}
+
+export const convertCollectionSnapshotToMap = (collections) => {
+    const transFormedCollection = collections.docs.map((doc) => {
+       
+        const { title, items } = doc.data();
+
+        return {
+            routeName: encodeURI(title.toLowerCase()),
+            id:doc.id,
+            title,
+            items
+        };
+    })
+
+    return transFormedCollection.reduce((accumulator, collection) => {
+        accumulator[collection.title.toLowerCase()] = collection;
+        return accumulator;
+    }, {})
+}
+
 
 firebase.initializeApp(config);
 

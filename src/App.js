@@ -16,6 +16,9 @@ import SignInnUp from './pages/signinnup/signinnup.component'
 import Header from './components/header/header.component'
 import Checkout from './pages/checkout/checkout.component.jsx'
 
+/*import {selectShopCollectionsForPreview} from './redux/shop/shop.selector';
+import {importDocumentsAndCollections} from './firebase/firebase.utils';*/
+
 class App extends React.Component {
   
  
@@ -26,7 +29,7 @@ class App extends React.Component {
 
   componentDidMount() {
 
-    const { setCurrentUser } = this.props;
+    const { setCurrentUser, /*collections*/} = this.props;
 
     this.unSubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
      if (userAuth) {
@@ -41,6 +44,8 @@ class App extends React.Component {
        setCurrentUser(userAuth)
      }
     })
+
+    // importDocumentsAndCollections('collections', collections.map(({title, items}) => ({title,items})))
   }
 
   componentWillUnmount() {
@@ -63,7 +68,8 @@ class App extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-    currentUser:selectCurrentUser
+    currentUser:selectCurrentUser /*,
+    collections:selectShopCollectionsForPreview*/
   })
 
 

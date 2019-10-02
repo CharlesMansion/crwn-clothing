@@ -1,42 +1,55 @@
 import React from 'react';
 import './shop.styles.scss';
 import {Route} from 'react-router-dom';
-import CollectionsOverview from '../../components/collections-overview/collections-overview.component';
-import Collection from '../collection/collection.component';
+import CollectionsOverviewContainer from '../../components/collections-overview/collections-overview.container';
+import CollectionContainer from '../collection/collection.container';
 
-import {firestore, convertCollectionSnapshotToMap} from '../../firebase/firebase.utils';
+//import {firestore, convertCollectionSnapshotToMap} from '../../firebase/firebase.utils';
 import { connect } from 'react-redux';
+import {updateCollectionsPending} from '../../redux/shop/shop.actions';
 
-import {updateCollections} from '../../redux/shop/shop.actions';
-
-import withSpinner from '../../components/with-spinner/with-spinner.component';
-
-const CollectionsOverviewWithSpinner = withSpinner(CollectionsOverview);
-const CollectionWithSpinner = withSpinner(Collection)
 
 class Shop extends React.Component {
-    state = {
-        isLoading:true
-    }
+    // state = {
+    //    isLoading:true
+    //}
 
-    unSubscribeFromSnapshot = null;
+    //unSubscribeFromSnapshot = null;
     
     componentDidMount() {
-        const { updateCollections } = this.props;
-        const collectionRef = firestore.collection('collections')
-        this.unSubscribeFromSnapshot = collectionRef.onSnapshot(async snapshot => {
-           const collectionsMap = convertCollectionSnapshotToMap(snapshot)
-           updateCollections(collectionsMap);
-           this.setState({isLoading:false})
-        })
+        // const { updateCollectionsStartAsync} = this.props
+        // const { updateCollections } = this.props;
+        // const collectionRef = firestore.collection('collections')
+        const {updateCollectionsPending} = this.props
+        // SUBSCRIPTION METHOD TO GET SHOP ITEMS
+
+          // this.unSubscribeFromSnapshot = collectionRef.onSnapshot(async snapshot => {
+          // const collectionsMap = convertCollectionSnapshotToMap(snapshot)
+          // updateCollections(collectionsMap);
+          // this.setState({isLoading:false})
+          //  })
+        
+          // CLASSIC FETCH METHOD TO GET SHOP ITEMS
+
+          // collectionRef.get().then(snapshot => {
+          // const collectionsMap = convertCollectionSnapshotToMap(snapshot)
+          // updateCollections(collectionsMap);
+          // this.setState({isLoading:false})
+          // })
+
+          // REDUX-THUNK FETCHING METHOD TO GET SHOP ITEMS
+
+          // updateCollectionsStartAsync()
+        updateCollectionsPending();
     }
+
     render() {
       const {match} = this.props
-      const {isLoading} = this.state
+     
         return (
             <div className="shop-page">
-                <Route exact path={`${match.path}`} render={(props) => <CollectionsOverviewWithSpinner isLoading={isLoading} {...props}/>}/>
-                <Route path={`${match.path}/:collectionId`} render={(props) => <CollectionWithSpinner isLoading={isLoading} {...props}/>}/>
+                <Route exact path={`${match.path}`} component={CollectionsOverviewContainer}/>
+                <Route path={`${match.path}/:collectionId`} component={CollectionContainer}/>
             </div>
         )
     }
@@ -44,7 +57,7 @@ class Shop extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        updateCollections : collections => dispatch(updateCollections(collections))
+        updateCollectionsPending : () => dispatch(updateCollectionsPending())
     }
 }
 

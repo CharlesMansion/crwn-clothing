@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './shop.styles.scss';
 import {Route} from 'react-router-dom';
 import CollectionsOverviewContainer from '../../components/collections-overview/collections-overview.container';
@@ -9,18 +9,21 @@ import { connect } from 'react-redux';
 import {updateCollectionsPending} from '../../redux/shop/shop.actions';
 
 
-class Shop extends React.Component {
+const Shop = ({updateCollectionsPending, match}) => {
     // state = {
     //    isLoading:true
     //}
 
     //unSubscribeFromSnapshot = null;
     
-    componentDidMount() {
+    useEffect(() => {
+        updateCollectionsPending()
+    }, [updateCollectionsPending])
+  //  componentDidMount() {
         // const { updateCollectionsStartAsync} = this.props
         // const { updateCollections } = this.props;
         // const collectionRef = firestore.collection('collections')
-        const {updateCollectionsPending} = this.props
+       // const {updateCollectionsPending} = this.props
         // SUBSCRIPTION METHOD TO GET SHOP ITEMS
 
           // this.unSubscribeFromSnapshot = collectionRef.onSnapshot(async snapshot => {
@@ -40,11 +43,8 @@ class Shop extends React.Component {
           // REDUX-THUNK FETCHING METHOD TO GET SHOP ITEMS
 
           // updateCollectionsStartAsync()
-        updateCollectionsPending();
-    }
-
-    render() {
-      const {match} = this.props
+      //  updateCollectionsPending();
+  //  }
      
         return (
             <div className="shop-page">
@@ -53,7 +53,6 @@ class Shop extends React.Component {
             </div>
         )
     }
-}
 
 const mapDispatchToProps = (dispatch) => {
     return {

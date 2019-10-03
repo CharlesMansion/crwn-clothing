@@ -77,7 +77,7 @@ export function* signingUp({payload:{email,displayName, password}}) {
 
             try {
                 console.log(3, displayName)
-                yield getSnapshotFromUserAuth2(user, {displayName})
+                yield getSnapshotFromUserAuth2  (user, {displayName})
             }
             catch (error) {
                 yield put(SignInFail(error))
